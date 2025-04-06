@@ -1,2 +1,20 @@
-/__pycache__
+/__pycache__/
+/instance/
+/migrations/
 *.db
+.env
+*.pyc
+*.pyo
+*.log
+.DS_Store
+.vscode/
+/venv/          # Ignorar el entorno virtual
+*.sqlite3       # Ignorar bases de datos SQLite
+*.bak           # Archivos de respaldo
+*.swp           # Archivos temporales de editores de texto
+.idea/          # Configuración de PyCharm/IntelliJ
+*.coverage      # Archivos de cobertura de pruebas
+htmlcov/        # Directorio de cobertura de pruebas HTML
+*.egg-info/     # Información de paquetes Python
+dist/           # Archivos de distribución
+build/          # Archivos de construcción

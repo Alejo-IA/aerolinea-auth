@@ -1,19 +1,122 @@
 {% extends "base.html" %}
-{% block title%} {{ title }} {% endblock %}
-{% block content%}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
 
-<div class="container py-4 text-center">
-
-
+<div class="container py-5">
     {% if current_user.is_authenticated %}
+        <h1 class="mb-4 text-center">¡Bienvenido, {{ current_user.username }}!</h1>
+        <p class="lead text-center">Gestiona tus vuelos y tu cuenta desde aquí.</p>
 
-    <h1>Welcome {{ current_user.username }}</h1>
-    <a href="{{url_for('logout')}}">Logout</a>
+        <!-- Información del cliente -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-user"></i> Información de la cuenta
+            </div>
+            <div class="card-body">
+                <p><strong>Nombre:</strong> {{ current_user.username }}</p>
+                <p><strong>Correo:</strong> {{ current_user.email }}</p>
+                <p><strong>Estado de la cuenta:</strong> {{ "Activa" if current_user.confirmado else "Pendiente de activación" }}</p>
+            </div>
+        </div>
 
+        <!-- Reservas de vuelos -->
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <i class="fas fa-plane"></i> Tus reservas de vuelo
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Destino</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Simulación de datos -->
+                        <tr>
+                            <td>1</td>
+                            <td>Bogotá - Medellín</td>
+                            <td>2025-04-10</td>
+                            <td>08:00 AM</td>
+                            <td><span class="badge bg-success">Confirmado</span></td>
+                            <td>
+                                <form method="POST" action="{{ url_for('routes.cancelar_reserva', reserva_id=1) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-times"></i> Cancelar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Medellín - Cartagena</td>
+                            <td>2025-04-15</td>
+                            <td>02:00 PM</td>
+                            <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+                            <td>
+                                <form method="POST" action="{{ url_for('routes.cancelar_reserva', reserva_id=2) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-times"></i> Cancelar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Opciones de gestión -->
+        <div class="text-center">
+            <a href="{{ url_for('routes.buscar_vuelos') }}" class="btn btn-success mb-3">
+                <i class="fas fa-search"></i> Buscar vuelos
+            </a>
+            <a href="{{ url_for('routes.reservar_vuelo') }}" class="btn btn-primary mb-3">
+                <i class="fas fa-plane-departure"></i> Reservar un vuelo
+            </a>
+            <a href="{{ url_for('routes.change_password') }}" class="btn btn-warning mb-3">
+                <i class="fas fa-key"></i> Cambiar contraseña
+            </a>
+            <a href="{{ url_for('routes.logout') }}" class="btn btn-danger mb-3">
+                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+            </a>
+        </div>
     {% else %}
-
-    <a href="{{url_for('login')}}">Sign in/Sign Up</a>
-    
+        <h1 class="mb-4 text-center">¡Bienvenido a Aerolínea Auth!</h1>
+        <p class="lead text-center">Inicia sesión o regístrate para gestionar tus vuelos.</p>
+        <div class="text-center">
+            <a href="{{ url_for('routes.login') }}" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+            </a>
+            <a href="{{ url_for('routes.register') }}" class="btn btn-success">
+                <i class="fas fa-user-plus"></i> Registrarse
+            </a>
+        </div>
     {% endif %}
 </div>
+
+<!-- Gráfico de destinos populares -->
+<div class="container mt-5">
+    <h3 class="text-center">Destinos más populares</h3>
+    <canvas id="destinosChart" width="400" height="200"></canvas>
+</div>
+<script>
+    const ctx = document.getElementById('destinosChart').getContext('2d');
+    const destinosChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Bogotá', 'Medellín', 'Cartagena'],
+            datasets: [{
+                label: 'Reservas por destino',
+                data: [12, 19, 3],
+                backgroundColor: ['#007bff', '#28a745', '#ffc107'],
+            }]
+        }
+    });
+</script>
 {% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Buscar vuelos{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4 text-center">Buscar vuelos</h1>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="origen" class="form-label">Origen</label>
+            <input type="text" class="form-control" id="origen" name="origen" required>
+        </div>
+        <div class="mb-3">
+            <label for="destino" class="form-label">Destino</label>
+            <input type="text" class="form-control" id="destino" name="destino" required>
+        </div>
+        <div class="mb-3">
+            <label for="fecha_salida" class="form-label">Fecha de salida</label>
+            <input type="date" class="form-control" id="fecha_salida" name="fecha_salida" required>
+        </div>
+        <div class="mb-3">
+            <label for="num_pasajeros" class="form-label">Número de pasajeros</label>
+            <input type="number" class="form-control" id="num_pasajeros" name="num_pasajeros" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Buscar vuelos</button>
+    </form>
+</div>
+{% endblock %}

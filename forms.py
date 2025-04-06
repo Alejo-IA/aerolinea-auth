@@ -1,56 +1,102 @@
-from wtforms import (
-    StringField,
-    PasswordField,
-    BooleanField,
-    IntegerField,
-    DateField,
-    TextAreaField,
-)
-
 from flask_wtf import FlaskForm
-from wtforms.validators import InputRequired, Length, EqualTo, Email, Regexp ,Optional
-import email_validator
-from flask_login import current_user
-from wtforms import ValidationError,validators
+from wtforms import StringField, PasswordField
+from wtforms.validators import (
+    InputRequired,
+    Length,
+    EqualTo,
+    Email,
+    Regexp,
+    Optional,
+    ValidationError,
+)
 from models import User
 
 
-class login_form(FlaskForm):
-    email = StringField(validators=[InputRequired(), Email(), Length(1, 64)])
-    pwd = PasswordField(validators=[InputRequired(), Length(min=8, max=72)])
-    # Placeholder labels to enable form rendering
-    username = StringField(
-        validators=[Optional()]
+# -----------------------------
+# Formulario de Login
+# -----------------------------
+class LoginForm(FlaskForm):
+    email = StringField(
+        "Correo electrónico",
+        validators=[InputRequired(message="Requerido"), Email(), Length(1, 64)],
+    )
+    pwd = PasswordField(
+        "Contraseña",
+        validators=[InputRequired(), Length(min=8, max=72)],
     )
 
 
-class register_form(FlaskForm):
+# -----------------------------
+# Formulario de Registro
+# -----------------------------
+class RegisterForm(FlaskForm):
     username = StringField(
+        "Nombre de usuario",
         validators=[
             InputRequired(),
-            Length(3, 20, message="Please provide a valid name"),
+            Length(3, 20, message="Debe tener entre 3 y 20 caracteres"),
             Regexp(
                 "^[A-Za-z][A-Za-z0-9_.]*$",
                 0,
-                "Usernames must have only letters, " "numbers, dots or underscores",
+                "Solo se permiten letras, números, puntos o guiones bajos",
             ),
-        ]
+        ],
     )
-    email = StringField(validators=[InputRequired(), Email(), Length(1, 64)])
-    pwd = PasswordField(validators=[InputRequired(), Length(8, 72)])
+    email = StringField(
+        "Correo electrónico",
+        validators=[InputRequired(), Email(), Length(1, 64)],
+    )
+    pwd = PasswordField(
+        "Contraseña",
+        validators=[InputRequired(), Length(8, 72)],
+    )
     cpwd = PasswordField(
+        "Confirmar contraseña",
         validators=[
             InputRequired(),
-            Length(8, 72),
-            EqualTo("pwd", message="Passwords must match !"),
-        ]
+            EqualTo("pwd", message="¡Las contraseñas deben coincidir!"),
+        ],
     )
-
 
     def validate_email(self, email):
         if User.query.filter_by(email=email.data).first():
-            raise ValidationError("Email already registered!")
+            raise ValidationError("¡Este correo ya está registrado!")
 
-    def validate_uname(self, uname):
+    def validate_username(self, username):
         if User.query.filter_by(username=username.data).first():
-            raise ValidationError("Username already taken!")
+            raise ValidationError("¡El nombre de usuario ya está en uso!")
+
+
+# -----------------------------
+# Paso 1: Solicitud de recuperación
+# -----------------------------
+class RequestResetForm(FlaskForm):
+    email = StringField(
+        "Correo electrónico",
+        validators=[InputRequired(), Email(), Length(1, 64)],
+    )
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError("No existe una cuenta con ese correo electrónico.")
+
+
+# -----------------------------
+# Paso 2: Nueva contraseña
+# -----------------------------
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField(
+        "Nueva contraseña",
+        validators=[
+            InputRequired(),
+            Length(min=8, max=72, message="Debe tener mínimo 8 caracteres"),
+        ],
+    )
+    confirm_password = PasswordField(
+        "Confirmar nueva contraseña",
+        validators=[
+            InputRequired(),
+            EqualTo("password", message="¡Las contraseñas deben coincidir!"),
+        ],
+    )
