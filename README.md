@@ -1,119 +1,114 @@
-# Sistema de Autenticación en Flask - Aerolínea Auth ✈️
+✈️ Flask Authentication System - Airline Auth
+Developed by Alejandro Areiza
 
-Este proyecto implementa un sistema de autenticación en Flask diseñado para una aerolínea. Incluye funcionalidades como registro de usuarios, inicio de sesión, recuperación de contraseña, y gestión de reservas de vuelos. Además, se han implementado características adicionales como confirmación de cuenta por correo y recuperación de contraseña mediante un enlace enviado al correo electrónico.
+This project implements a full-featured user authentication system built with Flask, specifically designed for an airline platform. It includes core functionalities such as user registration, login, password recovery, and flight reservation management. Additional features like email confirmation and secure password reset via email link are also integrated.
 
----
+🚀 Key Features
+🔐 Secure User Registration
+✔️ Implemented in routes.py under the /register/ route.
+✔️ Passwords are securely stored using bcrypt hashing.
 
-## **Características principales**
+🔑 User Login with Credential Validation
+✔️ Implemented in routes.py under the /login/ route.
+✔️ Email and password are verified using bcrypt to compare the stored hash.
 
-### **Registro de usuario con almacenamiento seguro de contraseña**
-✔️ Implementado en `routes.py` en la ruta `/register/`.  
-✔️ Las contraseñas se almacenan de forma segura utilizando `bcrypt`.
+🔁 Password Recovery System
+✔️ Implemented in routes.py under /reset_password and /reset_password/<token>.
+✔️ A password reset link is sent via email using secure tokens.
 
-### **Inicio de sesión con validación de credenciales**
-✔️ Implementado en `routes.py` en la ruta `/login/`.  
-✔️ Se valida el correo y la contraseña utilizando `bcrypt` para comparar el hash.
+🧑‍💼 User Session Management with flask.session
+✔️ Managed in routes.py using Flask-Login and the @login_required decorator.
+✔️ Sessions expire after 1 minute using @routes.before_app_request to manage timeouts.
 
-### **Recuperación de contraseña**
-✔️ Implementado en `routes.py` en las rutas `/reset_password` y `/reset_password/<token>`.  
-✔️ Se envía un correo con un enlace para restablecer la contraseña.
+🎁 Bonus Features
+📧 Account Activation via Email
+✔️ Implemented in routes.py under /register/ and /confirm_account/<token>.
+✔️ utils.py is used to generate and verify account activation tokens.
 
-### **Uso de sesiones (`flask.session`) para gestionar usuarios autenticados**
-✔️ Implementado en `routes.py` con `Flask-Login` y el decorador `@login_required`.  
-✔️ La sesión se mantiene activa por 1 minuto gracias al manejador `@routes.before_app_request`.
+🛠️ Password Recovery via Email Link or Code
+✔️ Implemented in routes.py under /reset_password.
+✔️ Secure token handling is managed by utils.py.
 
----
+✅ Evaluation Criteria
+✅ Fully Functional Code
+✔️ All core features (registration, login, password recovery) are implemented and operational.
 
-## **Bonificaciones**
+✅ Best Practices Followed
+✔️ Modular structure using Blueprints in routes.py.
+✔️ Flask-WTF is used for forms and validation.
+✔️ Passwords are hashed with bcrypt before storing.
 
-### **Enviar un correo de confirmación al registrarse para activar la cuenta**
-✔️ Implementado en `routes.py` en las rutas `/register/` y `/confirmar_cuenta/<token>`.  
-✔️ Se utiliza `utils.py` para generar y verificar tokens de activación.
+✅ Password Security
+✔️ Passwords are stored as hashes using bcrypt.
+✔️ Enforced password policy: minimum of 8 characters.
 
-### **Enviar un correo con un enlace o código para la recuperación de contraseña**
-✔️ Implementado en `routes.py` en la ruta `/reset_password`.  
-✔️ Se utiliza `utils.py` para generar y verificar tokens de recuperación.
+✅ Clean Project Structure
+✔️ Well-organized into separate files for routes, models, forms, and utilities.
+✔️ Sensitive data like secret keys and email credentials are stored in a .env file.
 
----
+📦 Prerequisites
+Python 3.8 or higher
 
-## **Criterios de evaluación**
+A virtual environment (optional but recommended)
 
-### **Código funcional**
-✔️ Todas las funcionalidades principales (registro, inicio de sesión, recuperación de contraseña) están implementadas y funcionales.
+SQLite (default database)
 
-### **Buenas prácticas**
-✔️ El proyecto está estructurado con Blueprints (`routes.py`).  
-✔️ Se utilizan extensiones como `Flask-WTF` para formularios y validaciones.  
-✔️ Las contraseñas se almacenan de forma segura con `bcrypt`.
+⚙️ Installation Instructions
+Clone the repository
 
-### **Seguridad en contraseñas**
-✔️ Las contraseñas se almacenan como hashes utilizando `bcrypt`.  
-✔️ Se valida que las contraseñas tengan un mínimo de 8 caracteres.
+bash
+Copy
+Edit
+git clone https://github.com/your-username/airline-auth.git
+cd airline-auth
+Set up the environment
 
-### **Estructura del proyecto**
-✔️ El proyecto está bien organizado con archivos separados para rutas, modelos, formularios y utilidades.  
-✔️ Se utiliza un archivo `.env` para almacenar configuraciones sensibles como claves secretas y credenciales de correo.
+bash
+Copy
+Edit
+python -m venv venv
+source venv/bin/activate   # On Windows: venv\Scripts\activate
+Install dependencies
 
----
-
-## **Requisitos previos**
-
-- Python 3.8 o superior.
-- Entorno virtual configurado (opcional pero recomendado).
-- SQLite (base de datos predeterminada).
-
----
-
-## **Instalación**
-
-1. **Clonar el repositorio**
-   ```bash
-   git clone https://github.com/tu-usuario/aerolinea-auth.git
-   cd aerolinea-auth
-
-
-
-
-
-   python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
-
-
+bash
+Copy
+Edit
 pip install flask
-
 pip install -r requirements.txt
+Create a .env file with the following configuration
 
-
+env
+Copy
+Edit
 SECRET_KEY=your-secret-key
 SQLALCHEMY_DATABASE_URI=sqlite:///database.db
 MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USE_TLS=True
-MAIL_USERNAME=tu-correo@gmail.com
-MAIL_PASSWORD=tu-contraseña-de-aplicación
-MAIL_DEFAULT_SENDER=tu-correo@gmail.com
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_DEFAULT_SENDER=your-email@gmail.com
+Initialize the database
 
-
-
-
+bash
+Copy
+Edit
 flask db init
-flask db migrate -m "Inicializar base de datos"
+flask db migrate -m "Initialize database"
 flask db upgrade
+Run the application
 
-
-
-
+bash
+Copy
+Edit
 python main.py
+📄 License
+Make sure to include a license file to let others know how they can use your project. For example, the MIT License:
 
-
-
----
-
-### **2. Agregar un archivo `LICENSE`**
-Incluye una licencia para que otros desarrolladores sepan cómo pueden usar tu proyecto. Por ejemplo, una licencia MIT:
-
-#### Archivo `LICENSE`:
-```plaintext
+LICENSE file:
+plaintext
+Copy
+Edit
 MIT License
 
 Copyright (c) 2025 Alejandro Areiza
